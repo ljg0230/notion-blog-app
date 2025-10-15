@@ -10,33 +10,7 @@ import TagSection from './_components/TagSection';
 import ProfileSection from './_components/ProfileSection';
 import ContactSection from './_components/ContactSection';
 import Link from 'next/link';
-
-const mockPosts = [
-  {
-    id: '1',
-    title: 'Next.js 13으로 블로그 만들기',
-    description: 'Next.js 13과 Notion API를 활용하여 개인 블로그를 만드는 방법을 알아봅니다.',
-    coverImage: 'https://picsum.photos/800/400',
-    tags: [
-      { id: '1', name: 'Next.js', count: 10 },
-      { id: '2', name: 'React', count: 5 },
-    ],
-    authors: '짐코딩',
-    date: '2024-02-01',
-  },
-  {
-    id: '2',
-    title: 'TypeScript 기초 다지기',
-    description: 'TypeScript의 기본 문법과 실전에서 자주 사용되는 패턴들을 살펴봅니다.',
-    coverImage: 'https://picsum.photos/800/401',
-    tags: [
-      { id: '3', name: 'TypeScript', count: 3 },
-      { id: '4', name: 'JavaScript', count: 3 },
-    ],
-    authors: '짐코딩',
-    date: '2024-01-15',
-  },
-];
+import { getPublishedPosts } from '@/lib/notion';
 
 const mockTags = [
   { id: '0', name: '전체', count: 20 },
@@ -47,7 +21,8 @@ const mockTags = [
   { id: '5', name: 'Next.js', count: 3 },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getPublishedPosts();
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-[200px_1fr_220px] gap-6">
@@ -73,7 +48,7 @@ export default function Home() {
           {/* 블로그 카드 그리드 */}
           <div className="grid gap-4">
             {/* 블로그 카드 반복 */}
-            {mockPosts.map((post) => (
+            {posts.map((post) => (
               <Link href={`/blog/${post.id}`} key={post.id}>
                 <PostCard key={post.id} post={post} />
               </Link>
