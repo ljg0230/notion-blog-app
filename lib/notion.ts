@@ -137,8 +137,8 @@ export interface GetPublishedPostsResponse {
 }
 
 export const getPublishedPosts = async ({
-  tag,
-  sort,
+  tag = '전체',
+  sort = 'latest',
   pageSize = 3,
   startCursor,
 }: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
