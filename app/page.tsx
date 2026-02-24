@@ -1,6 +1,6 @@
 import ProfileSection from './_components/ProfileSection';
 import ContactSection from './_components/ContactSection';
-import { getTags } from '@/lib/notion';
+import { getPublishedPosts, getTags } from '@/lib/notion';
 import HeaderSection from './_components/HeaderSection';
 import PostListSuspense from '@/components/features/blog/PostListSuspense';
 import { Suspense } from 'react';
@@ -17,7 +17,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const selectedTag = tag || '전체';
   const selectedSort = sort || 'latest';
   const tags = getTags();
-
+  const postsPromise = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-[200px_1fr_220px] gap-6">
@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
           {/* 블로그 카드 그리드 */}
           <Suspense fallback={<PostListSkeleton />}>
-            <PostListSuspense selectedTag={selectedTag} selectedSort={selectedSort} />
+            <PostListSuspense postsPromise={postsPromise} />
           </Suspense>
         </div>
         {/* 우측 사이드바 */}

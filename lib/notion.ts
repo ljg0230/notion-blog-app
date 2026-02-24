@@ -124,13 +124,13 @@ export const getTags = async (): Promise<TagFilterItem[]> => {
   return [allTag, ...sortedTags];
 };
 
-interface GetPublishedPostsParams {
+export interface GetPublishedPostsParams {
   tag?: string;
   sort?: string;
   pageSize?: number;
   startCursor?: string;
 }
-interface GetPublishedPostsResponse {
+export interface GetPublishedPostsResponse {
   posts: Post[];
   hasMore: boolean;
   nextCursor: string | null;
