@@ -139,7 +139,7 @@ export interface GetPublishedPostsResponse {
 export const getPublishedPosts = async ({
   tag,
   sort,
-  pageSize = 2,
+  pageSize = 3,
   startCursor,
 }: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
   const response = await notion.databases.query({
