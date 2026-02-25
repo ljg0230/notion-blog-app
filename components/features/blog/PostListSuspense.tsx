@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { PostCard } from '@/components/features/blog/PostCard';
-import { Button } from '@/components/ui/button';
 import { GetPublishedPostsResponse } from '@/lib/notion';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { use } from 'react';
+import { use, useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { Loader2 } from 'lucide-react';
 
 interface PostListProps {
   postsPromise: Promise<GetPublishedPostsResponse>;
@@ -42,11 +43,21 @@ export default function PostList({ postsPromise }: PostListProps) {
     },
   });
 
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
+  // const handleLoadMore = () => {
+  //   if (hasNextPage && !isFetchingNextPage) {
+  //     fetchNextPage();
+  //   }
+  // };
+
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  };
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allPosts = data?.pages.flatMap((page) => page.posts) ?? [];
 
@@ -59,7 +70,14 @@ export default function PostList({ postsPromise }: PostListProps) {
           </Link>
         ))}
       </div>
-      {hasNextPage && (
+      {hasNextPage && !isFetchingNextPage && <div ref={ref} className="h-10" />}
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center gap-2 py-4">
+          <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+          <span className="text-muted-foreground text-sm">로딩중...</span>
+        </div>
+      )}
+      {/* {hasNextPage && (
         <div>
           <Button
             variant="outline"
@@ -71,7 +89,7 @@ export default function PostList({ postsPromise }: PostListProps) {
             {isFetchingNextPage ? '로딩중...' : '더보기'}
           </Button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
